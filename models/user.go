@@ -2,6 +2,7 @@ package models
 
 import (
 	"MyGram/helpers"
+	"errors"
 
 	"github.com/asaskevich/govalidator"
 	"gorm.io/gorm"
@@ -21,6 +22,11 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	if errCreate != nil {
 		err = errCreate
 		return
+	}
+
+	if u.Age < 8 {
+		err = errors.New("Minimum age to register is 8")
+		return err
 	}
 
 	u.Password = helpers.HashPass(u.Password)
